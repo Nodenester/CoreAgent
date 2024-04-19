@@ -1,0 +1,10 @@
+{
+  "InternalDialog": [],
+  "VectorDb": [],
+  "llamaInfer": {},
+  "Goal": "Write a book about dogs",
+  "ExtraInfo": "The book should be about what dogs eat and stuff",
+  "CurrentOperation": null,
+  "CurrentPlan": null,
+  "TaskList": []
+}

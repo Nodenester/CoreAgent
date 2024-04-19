@@ -1,0 +1,35 @@
+  {
+  "InternalDialog": [],
+  "VectorDb": [],
+  "llamaInfer": {},
+  "Goal": "Create a website",
+  "ExtraInfo": "Create a website about what dogs eat using blazor wasm",
+  "CurrentOperation": null,
+  "CurrentPlan": "To create a website about what dogs eat using blazor wasm, follow these steps: \\n\\t1. Research on dog diets and their nutritional needs.\\n\\t2. Structure the site layout with key sections such as Home, About, Blog, and Contact.\\n\\t3. Develop content for each section based on dog dietary information.\\n\\t4. Implement the design using Blazor WebAssembly technology.\\n\\t5. Test the website to ensure all functionalities are working properly.\\n\\t6. Launch the site and promote it across relevant platforms.",
+  "TaskList": [
+    {
+      "Description": "Research on dog diets and their nutritional needs.",
+      "Completed": false
+    },
+    {
+      "Description": "Structure the site layout with key sections such as Home, About, Blog, and Contact.",
+      "Completed": false
+    },
+    {
+      "Description": "Develop content for each section based on dog dietary information.",
+      "Completed": false
+    },
+    {
+      "Description": "Implement the design using Blazor WebAssembly technology.",
+      "Completed": false
+    },
+    {
+      "Description": "Test the website to ensure all functionalities are working properly.",
+      "Completed": false
+    },
+    {
+      "Description": "Launch the site and promote it across relevant platforms.",
+      "Completed": false
+    }
+  ]
+}
