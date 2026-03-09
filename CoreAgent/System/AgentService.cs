@@ -6,8 +6,7 @@ using CoreAgent.Agent;
 
 public class AgentService
 {
-    private static string BasePath = @"F:\repos\AgentSwarmGang\CoreAgent\CoreAgent\Agent\Storage\AgentStorage\";
-    //private static string BasePath = Path.Combine(Environment.GetEnvironmentVariable("MY_APP_BASE_PATH"), @"CoreAgent\Storage\AgentStorage\");
+    private static string BasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Agent", "Storage", "AgentStorage");
 
     public static bool AgentDataExists(string folderName)
     {

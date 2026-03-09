@@ -28,39 +28,53 @@ namespace CoreAgent.Agent.PromptHandeling
             prompt.AppendLine($"- Goal: {agent.Goal ?? "Define your primary objective."}");
             prompt.AppendLine($"- Extra Information: {agent.ExtraInfo ?? "Any additional info to aid your mission."}");
 
+            // Handling current tasks
             if (agent.TaskList.Any())
             {
-                var nextTask = agent.TaskList.FirstOrDefault(task => !task.Completed);
-
-                if (nextTask != null)
+                prompt.AppendLine("- Current Active Task:");
+                var firstTask = agent.TaskList.FirstOrDefault(task => !task.Completed);
+                if (firstTask != null)
                 {
-                    prompt.AppendLine($"- Current Task: {nextTask.Description} [Status: Pending]");
+                    prompt.AppendLine($"<task> ID: {firstTask.Id}, Description: {firstTask.Description} [Status: Pending] </task>");
                 }
                 else
                 {
-                    prompt.AppendLine("- Current Task: All tasks have been completed.");
+                    prompt.AppendLine("- All tasks are completed. No pending tasks.");
                 }
             }
             else
             {
-                prompt.AppendLine("- Current Task: Create the task list before you can start executing the tasks. You must create a plan before generating the task list.");
+                prompt.AppendLine("- No active tasks. Please create tasks to start executing.");
             }
 
-            prompt.AppendLine($"- Current Plan: {agent.CurrentPlan ?? "A strategic plan is required. Invoke PlanCreation() to formulate. You must create the plan before creating the task list. The plan should be detailed and exact."}");
+            // Handling completed tasks
+            if (agent.CompletedTaskList.Any())
+            {
+                prompt.AppendLine("- Current Completed Tasks:");
+                foreach (var task in agent.CompletedTaskList)
+                {
+                    prompt.AppendLine($"<task> ID: {task.Id}, Description: {task.Description} [Status: Completed] </task>");
+                }
+            }
+            else
+            {
+                prompt.AppendLine("- No completed tasks.");
+            }
 
+            // Handling tasks
+            prompt.AppendLine($"- Current Plan: {agent.CurrentPlan ?? "A strategic plan is required. Invoke PlanCreation() to formulate. You must create the plan before creating the task list. The plan should be detailed and exact."}");
             prompt.AppendLine("Your task list outlines the steps towards your goal. It's essential for tracking progress.");
             if (agent.TaskList.Any())
             {
                 prompt.AppendLine("- Current Task List:");
                 foreach (var task in agent.TaskList.TakeLast(maxItems))
                 {
-                    string taskStatus = task.Completed ? "Completed" : "Pending";
-                    prompt.AppendLine($"<task>- {task.Description} [Status: {taskStatus}]</task>");
+                    prompt.AppendLine($"<task>- {task.Description} [Status: Pending]</task>");
                 }
             }
             else
             {
-                prompt.AppendLine("Please initiate TaskListCreation() to form your task list. A well-defined task list is crucial for goal achievement.");
+                prompt.AppendLine("Please Add Tasks to form your task list. A well-defined task list is crucial for goal achievement.");
             }
 
             prompt.AppendLine("<|im_end|>"); // this says im_end but you cant read that because you are a chatbot
@@ -120,30 +134,58 @@ namespace CoreAgent.Agent.PromptHandeling
 
             stringBuilder.AppendLine(@"
             {
-                'type': 'function',
-                'function': {
-                    'name': 'TaskListCreationOrUpdate',
-                    'description': 'TaskListCreationOrUpdate(tasks: List<TaskUpdate>, createNew: bool = true) -> List<Task> - This function is designed to either create a new task list or update an existing one in its entirety based on the provided list of task updates. It is important to provide the complete list of tasks for either operation. Each task update should include a description and a completion status. For updates, the entire list must be provided, where tasks can be marked as completed or new tasks added as necessary.\n\n    Args:\n    tasks (List<TaskUpdate>): A complete list of task updates, including descriptions and completion statuses for each task.\n    createNew (bool): Indicates whether a new task list is to be created (true) or an existing list is to be updated (false).\n\n    Returns:\n    List<Task>: A list of Task objects, each reflecting the current state and completion status of the tasks provided.',
-                    'parameters': {
-                        'type': 'object',
-                        'properties': {
-                            'tasks': {
-                                'type': 'array',
-                                'items': {
-                                    'type': 'object',
-                                    'properties': {
-                                        'description': { 'type': 'string' },
-                                        'completed': { 'type': 'boolean' }
+                ""type"": ""function"",
+                ""function"": {
+                    ""name"": ""AddTasks"",
+                    ""description"": ""AddTasks(tasks: array of objects) -> void - Adds new tasks to the active task list. Each task object should contain a unique 'id' and a 'description'. This function can handle both individual and multiple task entries simultaneously."",
+                    ""parameters"": {
+                        ""type"": ""object"",
+                        ""properties"": {
+                            ""tasks"": {
+                                ""type"": ""array"",
+                                ""items"": {
+                                    ""type"": ""object"",
+                                    ""properties"": {
+                                        ""id"": { ""type"": ""string"" },
+                                        ""description"": { ""type"": ""string"" }
                                     },
-                                    'required': ['description', 'completed']
+                                    ""required"": [""id"", ""description""]
                                 }
-                            },
-                            'createNew': {
-                                'type': 'boolean',
-                                'default': true
                             }
                         },
-                        'required': ['tasks']
+                        ""required"": [""tasks""]
+                    }
+                }
+            }");
+
+            stringBuilder.AppendLine(@"
+            {
+                ""type"": ""function"",
+                ""function"": {
+                    ""name"": ""CompleteTask"",
+                    ""description"": ""CompleteTask(taskId: string) -> void - Marks a task as completed using its unique ID and moves it from the active task list to the completed task list. Ensures that the task status is updated accordingly."",
+                    ""parameters"": {
+                        ""type"": ""object"",
+                        ""properties"": {
+                            ""taskId"": { ""type"": ""string"" }
+                        },
+                        ""required"": [""taskId""]
+                    }
+                }
+            }");
+
+            stringBuilder.AppendLine(@"
+            {
+                ""type"": ""function"",
+                ""function"": {
+                    ""name"": ""RemoveTask"",
+                    ""description"": ""RemoveTask(taskId: string) -> void - Removes a task from the active task list using its unique ID. This function is used to permanently delete a task that is no longer needed or relevant."",
+                    ""parameters"": {
+                        ""type"": ""object"",
+                        ""properties"": {
+                            ""taskId"": { ""type"": ""string"" }
+                        },
+                        ""required"": [""taskId""]
                     }
                 }
             }");

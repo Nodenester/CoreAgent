@@ -10,7 +10,7 @@ namespace CoreAgent.System
 {
     public class VectorService
     {
-        private static string BasePath = @"F:\repos\AgentSwarmGang\CoreAgent\CoreAgent\Agent\Storage\AgentStorage\";
+        private static string BasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Agent", "Storage", "AgentStorage");
 
         public static void SaveVectorData(string folderName, List<VectorDbItem> items)
         {

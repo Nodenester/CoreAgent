@@ -23,6 +23,7 @@ namespace CoreAgent.Agent
         {
             folderName = _folderName;
             TaskList = new List<AgentTask>();
+            CompletedTaskList = new List<AgentTask>();
             if (_folderName != "")
             {
                 InitializeAgent();
@@ -36,6 +37,7 @@ namespace CoreAgent.Agent
 
         public string CurrentPlan { get; set; }
         public List<AgentTask> TaskList { get; set; }
+        public List<AgentTask> CompletedTaskList { get; set; }
 
         public async Task Run()
         {
@@ -58,6 +60,7 @@ namespace CoreAgent.Agent
                 CurrentOperation = loadedAgent.CurrentOperation;
                 CurrentPlan = loadedAgent.CurrentPlan;
                 TaskList = loadedAgent.TaskList;
+                CompletedTaskList = loadedAgent.CompletedTaskList;
                 InternalDialog = loadedAgent.InternalDialog;
             }
             else

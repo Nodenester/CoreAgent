@@ -15,12 +15,14 @@ namespace CoreAgent.Data
 
     public class AgentTask
     {
+        public string Id { get; set; }
         public string Description { get; set; }
         public bool Completed { get; set; }
 
         // Constructor to initialize a new task
-        public AgentTask(string description, bool completed = false)
+        public AgentTask(string id, string description, bool completed = false)
         {
+            Id = id;
             Description = description;
             Completed = completed;
         }

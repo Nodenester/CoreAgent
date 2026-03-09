@@ -24,6 +24,10 @@ namespace CoreAgent.Agent
             var promptGenerator = new PromptGenerator();
             string prompt = await promptGenerator.GeneratePrompt(agent, false);
 
+            Console.WriteLine("---------------------------------------------------------------------------");
+            Console.WriteLine(prompt);
+            Console.WriteLine("---------------------------------------------------------------------------");
+
             List<string> antiPrompt = new List<string>() { "</tool_call>", "<|im_end|>" };
             int maxTokens = 512;
             double temperature = 0.6;
